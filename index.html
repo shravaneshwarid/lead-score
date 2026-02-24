@@ -3,9 +3,19 @@
 <head>
     <title>Lead Scoring Dashboard</title>
     <style>
-        body { font-family: Arial; padding: 30px; }
-        .card { border: 1px solid #ccc; padding: 20px; width: 300px; }
-        button { padding: 8px 12px; margin-top: 10px; }
+        body {
+            font-family: Arial, sans-serif;
+            padding: 30px;
+        }
+        .card {
+            border: 1px solid #ccc;
+            padding: 20px;
+            width: 350px;
+        }
+        button {
+            padding: 8px 12px;
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
@@ -14,15 +24,78 @@
 
 <div class="card">
     <p><b>Lead Score:</b> <span id="score">0</span></p>
-    <p><b>Action:</b> <span id="action">-</span></p>
+    <p><b>Reason:</b></p>
+    <ul id="reasons"></ul>
+    <p><b>Next Action:</b> <span id="action">-</span></p>
+
     <button onclick="calculateScore()">Calculate Score</button>
 </div>
 
 <script>
+function enquiryDateScore(enquiryDate) {
+    const today = new Date();
+    const enquiry = new Date(enquiryDate);
+    const diffDays = Math.floor((today - enquiry) / (1000 * 60 * 60 * 24));
+
+    if (diffDays <= 2) return [20, "Recent enquiry (0–2 days)"];
+    if (diffDays <= 7) return [10, "Enquiry within a week"];
+    if (diffDays <= 15) return [5, "Enquiry within 15 days"];
+    return [0, "Old enquiry"];
+}
+
 function calculateScore() {
-    let score = 80;
+    let score = 0;
+    let reasons = [];
+
+    // Demo requested
+    score += 25;
+    reasons.push("Demo requested (+25)");
+
+    // Registration
+    score += 15;
+    reasons.push("Registration completed (+15)");
+
+    // Enquiry via call or WhatsApp
+    score += 20;
+    reasons.push("Enquiry via call/WhatsApp (+20)");
+
+    // Enquiry date
+    const [dateScore, dateReason] = enquiryDateScore("2026-02-22");
+    score += dateScore;
+    reasons.push(dateReason + " (+" + dateScore + ")");
+
+    // Price comparison
+    score += 10;
+    reasons.push("Compared pricing with market (+10)");
+
+    // Lead source: referral
+    score += 20;
+    reasons.push("Lead through referral (+20)");
+
+    // Cap score at 100
+    score = Math.min(score, 100);
+
+    // Next best action
+    let action = "";
+    if (score >= 70) {
+        action = "Immediate sales call";
+    } else if (score >= 40) {
+        action = "Follow-up via email or WhatsApp";
+    } else {
+        action = "Nurture lead with marketing content";
+    }
+
+    // Update UI
     document.getElementById("score").innerText = score;
-    document.getElementById("action").innerText = "Immediate Sales Call";
+    document.getElementById("action").innerText = action;
+
+    const reasonList = document.getElementById("reasons");
+    reasonList.innerHTML = "";
+    reasons.forEach(r => {
+        const li = document.createElement("li");
+        li.innerText = r;
+        reasonList.appendChild(li);
+    });
 }
 </script>
 

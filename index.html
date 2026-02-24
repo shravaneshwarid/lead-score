@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Lead Scoring Dashboard</title>
+    <style>
+        body { font-family: Arial; padding: 30px; }
+        .card { border: 1px solid #ccc; padding: 20px; width: 300px; }
+        button { padding: 8px 12px; margin-top: 10px; }
+    </style>
+</head>
+<body>
+
+<h2>AI Lead Scoring Dashboard</h2>
+
+<div class="card">
+    <p><b>Lead Score:</b> <span id="score">0</span></p>
+    <p><b>Action:</b> <span id="action">-</span></p>
+    <button onclick="calculateScore()">Calculate Score</button>
+</div>
+
+<script>
+function calculateScore() {
+    let score = 80;
+    document.getElementById("score").innerText = score;
+    document.getElementById("action").innerText = "Immediate Sales Call";
+}
+</script>
+
+</body>
+</html>
